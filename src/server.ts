@@ -11,11 +11,12 @@ let server: Server;
 const startServer = async () => {
 try {
     await mongoose.connect(envVar.DB_URL as string);
+    console.log("PORT is:", envVar.PORT);
 
     console.log("Connected to DB !!");
     
     server = app.listen(envVar.PORT, ()=>{
-        console.log(`Server is listening post ${envVar.PORT}`);
+        console.log(`Server is listening port ${envVar.PORT}`);
     })
 } catch (error) {
     console.log(error);
@@ -87,3 +88,26 @@ process.on("SIGINT", (err)=>{
 
 // Promise.reject(new Error("I forgot to cash this promise"))
 // throw new Error("I for to handle this local error")
+
+
+//Create a minimal server.ts for testing - start
+
+
+// import express from "express";
+
+// const app = express();
+// const PORT = 6000;
+
+// app.get("/", (req, res) => {
+//   res.send("Hello from minimal server!");
+// });
+
+// app.listen(PORT, () => {
+//   console.log(`Server running on http://localhost:${PORT}`);
+// });
+
+// Create a minimal server.ts for testing - end
+
+
+
+
