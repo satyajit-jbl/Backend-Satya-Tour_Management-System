@@ -7,5 +7,4 @@ const notFound=(req: Request, res: Response)=>{
         message: "Route Not Found"
     })
 }
-
 export default notFound;
