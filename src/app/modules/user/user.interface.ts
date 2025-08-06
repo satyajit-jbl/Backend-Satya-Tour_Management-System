@@ -32,7 +32,7 @@ export interface IUser{
     address ?: string;
     isDeleated ?: string;
     isActive ?: isActive;
-    isVerified ?: string;
+    isVerified ?: boolean;
 
     role: Role;
     auths: IAuthProvider[];
