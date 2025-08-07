@@ -29,9 +29,14 @@ const credentialsLogin = async(payload: Partial<IUser>)=>{
     // const accessToken = jwt.sign(jwtPayload, "secret",{
     //     expiresIn: "1d",
     // })
+    const refreshToken = generateToken(jwtPayload, envVar.JWT_REFRESH_SECRET, envVar.JWT_REFRESH_EXPIRES)
+
+    const {password : pass, ...rest} = isUserExist;
 
     return{
-        accessToken
+        accessToken,
+        refreshToken,
+        user: rest
     }
 }
 
