@@ -44,7 +44,6 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
     }
 }
 
-
 const getNewAccessToken = async (refreshToken: string) => {
 
     const newAccessToken = await createNewAccessTokenWithRefreshToken(refreshToken)
@@ -66,7 +65,6 @@ const resetPassword = async (oldPassword: string, newPassword: string, decodedTo
     user!.password = await bcryptjs.hash(newPassword, Number(envVar.BCRYPT_SALT_ROUND))
 
     user!.save();
- 
 }
 
 export const AuthServices = {
