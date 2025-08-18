@@ -27,7 +27,7 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
             throw new AppError(httpStatus.BAD_REQUEST, `User is ${isUserExist.isActive}`)
         }
 
-        if (isUserExist.isDeleated) {
+        if (isUserExist.isDeleted) {
             throw new AppError(httpStatus.BAD_REQUEST, "User is Deleted")
         }
 
