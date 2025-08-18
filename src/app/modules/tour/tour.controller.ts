@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import { TourService } from './tour.service';
+import { Tour } from './tour.model';
 
 const createTour = catchAsync(async (req: Request, res: Response) => {
 
@@ -16,8 +17,8 @@ const createTour = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllTours = catchAsync(async (req: Request, res: Response) => {
-
-    const result = await TourService.getAllTours();
+    const query = req.query
+    const result = await TourService.getAllTours(query as Record<string, string>);
     sendResponse(res, {
         statusCode: 200,
         success: true,
@@ -26,6 +27,7 @@ const getAllTours = catchAsync(async (req: Request, res: Response) => {
         meta: result.meta,
     });
 });
+
 
 const updateTour = catchAsync(async (req: Request, res: Response) => {
     const result = await TourService.updateTour(req.params.id, req.body);
@@ -58,7 +60,6 @@ const getAllTourTypes = catchAsync(async (req: Request, res: Response) => {
 
 const createTourType = catchAsync(async (req: Request, res: Response) => {
     const { name } = req.body;
-    console.log(name);
     const result = await TourService.createTourType({name});
     sendResponse(res, {
         statusCode: 201,
@@ -71,9 +72,7 @@ const createTourType = catchAsync(async (req: Request, res: Response) => {
 const updateTourType = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
     const { name } = req.body;
-    console.log(name);
     const result = await TourService.updateTourType(id, {name});
-    console.log("result", result);
     sendResponse(res, {
         statusCode: 200,
         success: true,
