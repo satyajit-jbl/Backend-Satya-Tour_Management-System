@@ -3,10 +3,11 @@
 // import { QueryBuilder } from "../../utils/QueryBuilder";
 // import { tourSearchableFields, tourTypeSearchableFields } from "./tour.constant";
 // import mongoose from "mongoose";
-import { excludeField } from "../../constants";
+
 import { tourSearchableField } from "./tour.constant";
 import { ITour, ITourType } from "./tour.interface";
 import { Tour, TourType } from "./tour.model";
+import { QueryBuilder } from "../../utils/QueryBuilder";
 
 const createTour = async (payload: ITour) => {
     const existingTour = await Tour.findOne({ title: payload.title });
@@ -29,33 +30,74 @@ const createTour = async (payload: ITour) => {
     return tour;
 };
 
-const getAllTours = async (query:Record <string, string>) => {
-console.log(query);
-const filter = query
-const searchTerm = query.searchTerm || "";
-const sort = query.sort || "-createdAt";
-const fields = query.fields.split(",").join(" ") || ""; //old field: title,location, new: title location
-
-// delete filter["searchTerm"]
-// delete filter["sort"]
 
 
-for(const field of excludeField){  //for-of (Array), for-in(Object)
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete filter[field]
-}
+// const getAllToursold = async (query: Record<string, string>) => {
+//     console.log(query);
+//     const filter = query
+//     const searchTerm = query.searchTerm || "";
+//     const sort = query.sort || "-createdAt";
+//     const page = Number(query.page) || 1;
+//     const limit = Number(query.limit) || 10;
+//     const skip = (page - 1) * limit
 
-const searchQuery = {
-    $or: tourSearchableField.map(field =>({[field]: {$regex: searchTerm, $options: "i"}}))
-}
-const tours = await Tour.find(searchQuery).find(filter).sort(sort).select(fields);
-const totalTours = await Tour.countDocuments();
+
+//     const fields = query.fields?.split(",").join(" ") || ""; //old field: title,location, new: title location
+//     // delete filter["searchTerm"]
+//     // delete filter["sort"]
+
+
+//     for (const field of excludeField) {  //for-of (Array), for-in(Object)
+//         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+//         delete filter[field]
+//     }
+
+// const searchQuery = {
+//     $or: tourSearchableField.map(field => ({ [field]: { $regex: searchTerm, $options: "i" } }))
+// }
+//     // const tours = await Tour.find(searchQuery).find(filter).sort(sort).select(fields).skip(skip).limit(limit);
+//     const filterQuery = Tour.find(filter)
+//     const tours = filterQuery.find(searchQuery)
+//     const allTours = await tours.sort(sort).select(fields).skip(skip).limit(limit);
+
+
+//     const totalTours = await Tour.countDocuments();
+//     const totalPage = Math.ceil(totalTours / limit)
+
+//     const meta = {
+//         page: page,
+//         limit: limit,
+//         total: totalTours,
+//         totalPage: totalPage
+//     }
+
+//     return {
+//         data: allTours,
+//         meta: meta
+//     }
+// };
+
+const getAllTours = async (query: Record<string, string>) => {
+
+    const queryBuilder = new QueryBuilder(Tour.find(), query)
+
+    const tours = await queryBuilder.search(tourSearchableField).filter().modelQuery
+    // const allTours = await tours.sort(sort).select(fields).skip(skip).limit(limit);
+
+
+    // const totalTours = await Tour.countDocuments();
+    // const totalPage = Math.ceil(totalTours / limit)
+
+    // const meta = {
+    //     page: page,
+    //     limit: limit,
+    //     total: totalTours,
+    //     totalPage: totalPage
+    // }
 
     return {
         data: tours,
-        meta:{
-            total: totalTours
-        }
+        // meta: meta
     }
 };
 
@@ -71,12 +113,12 @@ const updateTour = async (id: string, payload: Partial<ITour>) => {
     // if (payload.title) {
     //         const baseSlug = payload.title.toLocaleLowerCase().split(" ").join("-");
     //         let slug = `${baseSlug}`
-    
+
     //         let counter = 0;
     //         while (await Tour.exists({ slug })) {
     //             slug = `${slug}-${counter++}`
     //         }
-    
+
     //         payload.slug = slug;
     //     }
     const updatedTour = await Tour.findByIdAndUpdate(id, payload, { new: true });

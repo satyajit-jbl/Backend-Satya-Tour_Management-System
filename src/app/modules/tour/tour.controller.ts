@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import { TourService } from './tour.service';
-import { Tour } from './tour.model';
+// import { Tour } from './tour.model';
 
 const createTour = catchAsync(async (req: Request, res: Response) => {
 
@@ -24,7 +24,7 @@ const getAllTours = catchAsync(async (req: Request, res: Response) => {
         success: true,
         message: 'Tours retrieved successfully',
         data: result.data,
-        meta: result.meta,
+        // meta: result.meta,
     });
 });
 
